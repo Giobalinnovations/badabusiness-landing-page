@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+
 import {
   Form,
   FormControl,
@@ -15,21 +15,18 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { submitForm } from '@/app/actions';
 
 const formSchema = z.object({
-  profession: z.string().min(1, { message: 'Please select a profession.' }),
+  profession: z
+    .string()
+    .min(2, { message: 'Profession must be at least 2 characters.' }),
   annualizedRevenue: z
     .string()
-    .min(1, { message: 'Please select an annualized revenue range.' }),
-  contact: z.string().min(1, { message: 'Please select a contact method.' }),
+    .min(1, { message: 'Please enter an annualized revenue.' }),
+  contact: z.string().regex(/^\d{10}$/, {
+    message: 'Please enter a valid 10-digit phone number.',
+  }),
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   state: z.string().min(2, { message: 'Please enter a valid state.' }),
@@ -38,7 +35,7 @@ const formSchema = z.object({
   }),
 });
 
-export function HeroForm() {
+export default function HeroForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -74,160 +71,114 @@ export function HeroForm() {
   }
 
   return (
-    <div className="bg-white p-8 rounded-lg shadow-lg">
-      {/* <h2 className="text-2xl font-bold text-[#2A3342] mb-6">
-        Get a free preview
-      </h2>
-      <p className="text-[#4B5563] mb-6">
-        Get a taste of our guides, templates, and resources, absolutely free.
-      </p> */}
+    <div className="bg-white p-8 h-full shadow-lg">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="profession"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Profession</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="profession"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="truncate">Profession</FormLabel>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select your profession" />
-                    </SelectTrigger>
+                    <Input placeholder="Enter your profession" {...field} />
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="developer">Developer</SelectItem>
-                    <SelectItem value="designer">Designer</SelectItem>
-                    <SelectItem value="manager">Manager</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="annualizedRevenue"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Annualized Revenue</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="annualizedRevenue"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="truncate">Annualized Revenue</FormLabel>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select revenue range" />
-                    </SelectTrigger>
+                    <Input
+                      placeholder="Enter your annualized revenue"
+                      {...field}
+                    />
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="0-100k">$0 - $100k</SelectItem>
-                    <SelectItem value="100k-500k">$100k - $500k</SelectItem>
-                    <SelectItem value="500k-1m">$500k - $1M</SelectItem>
-                    <SelectItem value="1m+">$1M+</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="contact"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Preferred Contact Method</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="contact"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="truncate">Phone Number</FormLabel>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select contact method" />
-                    </SelectTrigger>
+                    <Input
+                      type="tel"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      placeholder="Enter 10-digit phone number"
+                      {...field}
+                      onChange={e => {
+                        const value = e.target.value.replace(/\D/g, '');
+                        field.onChange(value);
+                      }}
+                    />
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="email">Email</SelectItem>
-                    <SelectItem value="phone">Phone</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="John Doe" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="johndoe@example.com" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="state"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>State</FormLabel>
-                <FormControl>
-                  <Input placeholder="California" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="agreeToPolicy"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel>
-                    I agree to the{' '}
-                    <a href="#" className="text-[#F59E0B] hover:underline">
-                      privacy policy
-                    </a>
-                    .
-                  </FormLabel>
-                </div>
-              </FormItem>
-            )}
-          />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="truncate">Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="John Doe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="truncate">Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="johndoe@example.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="state"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="truncate">State</FormLabel>
+                  <FormControl>
+                    <Input placeholder="California" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
           {submitError && <p className="text-red-500">{submitError}</p>}
           <Button
             type="submit"
-            className="w-full bg-[#F59E0B] text-[#2A3342] hover:bg-[#D97706]"
+            className="w-full bg-primary text-white hover:bg-primary/90"
             disabled={isLoading}
           >
-            {isLoading ? 'Submitting...' : 'Get Started'}
+            {isLoading ? 'Submitting...' : 'Submit'}
           </Button>
         </form>
       </Form>

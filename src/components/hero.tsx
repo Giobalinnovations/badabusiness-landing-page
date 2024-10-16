@@ -1,42 +1,27 @@
-import { Button } from '@/components/ui/button';
-import { SectionWrapper } from '@/components/ui/section-wrapper';
-import { HeroForm } from '@/components/hero-form';
+import Image from 'next/image';
+
+import SectionWrapper from './ui/section-wrapper';
+import HeroForm from './hero-form';
 
 export default function Hero() {
   return (
-    <section className="bg-[#2A3342] py-16 md:py-24">
+    <section className="bg-[#2a3342] py-16 md:py-0">
       <SectionWrapper>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div>
-            <span className="inline-block bg-[#374151] text-white text-sm font-medium px-3 py-1 rounded-full mb-4">
-              Startup Launch Checklist
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              <span className="text-[#F59E0B]">Ultimate</span> marketing
-              <br />
-              checklist guide
-            </h1>
-            <p className="text-[#9CA3AF] text-lg mb-8">
-              Streamline your marketing efforts with our
-              <br />
-              comprehensive guides designed for small businesses.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Button
-                variant="default"
-                className="bg-[#F59E0B] text-[#2A3342] hover:bg-[#D97706]"
-              >
-                Get Started
-              </Button>
-              <Button
-                variant="outline"
-                className="text-white border-white hover:bg-white hover:text-[#2A3342]"
-              >
-                Book Demo
-              </Button>
+        <div className="flex flex-col md:flex-row items-stretch">
+          <div className="w-full md:flex-grow md:mb-0">
+            <div className="relative aspect-video">
+              <Image
+                src="/images/hero-banner.webp"
+                alt="Hero Banner"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
           </div>
-          <div>
+          <div className="w-full md:w-[400px]  flex-shrink-0">
+            {' '}
+            {/* Increased width from 300px to 400px */}
             <HeroForm />
           </div>
         </div>
