@@ -1,28 +1,63 @@
 'use server';
 
+import { actionClient } from '@/lib/safe-action';
 import { z } from 'zod';
+import nodemailer from 'nodemailer';
 
 const formSchema = z.object({
-  profession: z.string().min(1),
-  annualizedRevenue: z.string().min(1),
-  contact: z.string().min(1),
-  name: z.string().min(2),
-  email: z.string().email(),
-  state: z.string().min(2),
-  agreeToPolicy: z.boolean(),
+  profession: z
+    .string()
+    .min(2, { message: 'Profession must be at least 2 characters.' }),
+  annualizedRevenue: z
+    .string()
+    .min(1, { message: 'Please enter an annualized revenue.' }),
+  contact: z.string().regex(/^\d{10}$/, {
+    message: 'Please enter a valid 10-digit phone number.',
+  }),
+  name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
+  email: z.string().email({ message: 'Please enter a valid email address.' }),
+  state: z.string().min(2, { message: 'Please enter a valid state.' }),
 });
 
-export async function submitForm(data: z.infer<typeof formSchema>) {
-  const result = formSchema.safeParse(data);
+export const submitContact = actionClient
+  .schema(formSchema)
+  .action(async ({ parsedInput }) => {
+    if (!parsedInput) return { error: 'Invalid input' };
 
-  if (!result.success) {
-    throw new Error('Invalid form data');
-  }
+    try {
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: parseInt(process.env.SMTP_PORT || '587'),
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      });
 
-  // Here you would typically send an email or save to a database
-  // For this example, we'll just simulate a delay
-  await new Promise(resolve => setTimeout(resolve, 2000));
+      const mailOptions = {
+        from: process.env.SMTP_USER,
+        to: process.env.SMTP_USER,
+        subject: 'New Contact Form Submission',
+        text: `
+        New contact form submission:
 
-  // If everything is successful, you can return some data or just resolve
-  return { success: true };
-}
+        Name: ${parsedInput.name}
+        Email: ${parsedInput.email}
+        Telephone: ${parsedInput.contact}
+        Profession: ${parsedInput.profession}
+        Annualized Revenue: ${parsedInput.annualizedRevenue}
+        State: ${parsedInput.state}
+      `,
+      };
+
+      await transporter.sendMail(mailOptions);
+
+      return { success: true };
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
+      return {
+        success: false,
+        error: 'Failed to submit contact form. Please try again.',
+      };
+    }
+  });

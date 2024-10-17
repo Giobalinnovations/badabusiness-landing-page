@@ -1,6 +1,4 @@
 'use client';
-
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -15,7 +13,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { submitForm } from '@/app/actions';
+
+import { useAction } from 'next-safe-action/hooks';
+import { toast } from '@/hooks/use-toast';
+import { submitContact } from '@/app/actions';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   profession: z
@@ -30,14 +32,35 @@ const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   state: z.string().min(2, { message: 'Please enter a valid state.' }),
-  agreeToPolicy: z.boolean().refine(val => val === true, {
-    message: 'You must agree to the privacy policy.',
-  }),
 });
-
 export default function HeroForm() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const { execute, status } = useAction(submitContact, {
+    onSuccess(data) {
+      if (data?.data?.success) {
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: 'Your message has been sent successfully!',
+        });
+        form.reset();
+      }
+      if (data?.data?.error) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: data?.data?.error ?? 'Failed to send message',
+        });
+      }
+    },
+    onError(error) {
+      console.error('Submit error:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'An unexpected error occurred. Please try again.',
+      });
+    },
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,26 +71,11 @@ export default function HeroForm() {
       name: '',
       email: '',
       state: '',
-      agreeToPolicy: false,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    setSubmitError(null);
-    try {
-      await submitForm(values);
-      form.reset();
-      // Show success message or redirect
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setSubmitError(error.message);
-      } else {
-        setSubmitError('An unknown error occurred.');
-      }
-    } finally {
-      setIsLoading(false);
-    }
+    execute(values);
   }
 
   return (
@@ -136,7 +144,7 @@ export default function HeroForm() {
                 <FormItem>
                   <FormLabel className="truncate">Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="John Doe" {...field} />
+                    <Input placeholder="your name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -151,7 +159,7 @@ export default function HeroForm() {
                 <FormItem>
                   <FormLabel className="truncate">Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="johndoe@example.com" {...field} />
+                    <Input placeholder="yourname@example.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -164,7 +172,7 @@ export default function HeroForm() {
                 <FormItem>
                   <FormLabel className="truncate">State</FormLabel>
                   <FormControl>
-                    <Input placeholder="California" {...field} />
+                    <Input placeholder="Delhi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -172,13 +180,19 @@ export default function HeroForm() {
             />
           </div>
 
-          {submitError && <p className="text-red-500">{submitError}</p>}
           <Button
             type="submit"
             className="w-full bg-primary text-white hover:bg-primary/90"
-            disabled={isLoading}
+            disabled={status === 'executing'}
           >
-            {isLoading ? 'Submitting...' : 'Submit'}
+            {status === 'executing' ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              'Send Message'
+            )}
           </Button>
         </form>
       </Form>
