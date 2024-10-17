@@ -7,28 +7,31 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import SectionWrapper from './ui/section-wrapper';
 
 export default function Funnel() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Image Section */}
-        <div className="lg:w-1/2 lg:sticky lg:top-0 lg:self-start">
-          <div className="relative aspect-square lg:aspect-auto lg:h-[calc(100vh-112px)]">
-            <Image
-              src="/images/img-2.webp"
-              alt="Marketing Package Illustration"
-              fill
-              className="rounded-lg object-cover"
-            />
+    <div className="py-14">
+      <SectionWrapper>
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Image Section */}
+          <div className="lg:w-1/2 lg:sticky lg:top-0 lg:self-start">
+            <div className="relative aspect-square lg:aspect-auto lg:h-[calc(100vh-112px)]">
+              <Image
+                src="/images/img-2.webp"
+                alt="Marketing Package Illustration"
+                fill
+                className="rounded-lg object-cover"
+              />
+            </div>
+          </div>
+
+          {/* FAQ Section */}
+          <div className="lg:w-1/2">
+            <FAQSection />
           </div>
         </div>
-
-        {/* FAQ Section */}
-        <div className="lg:w-1/2">
-          <FAQSection />
-        </div>
-      </div>
+      </SectionWrapper>
     </div>
   );
 }
@@ -106,7 +109,7 @@ This program will actually enable the participant to grow revenue, operate more 
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <h2 className="text-4xl sm:text-5xl font-bold text-[#2D3748] mb-4 leading-tight">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#2D3748] mb-4 leading-tight">
         Revamp Your Business with the{' '}
         <span className="text-primary">Leadership Funnel Program</span> by Dr.
         Vivek Bindra

@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import SectionWrapper from './ui/section-wrapper';
 
 interface CreativeImage {
   id: number;
@@ -41,50 +42,53 @@ export default function Creative() {
   };
 
   return (
-    <section className="py-12 px-4 sm:px-6 lg:px-8 bg-gray-100">
-      <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {creativeImages.map(image => (
-          <div
-            key={image.id}
-            className={`relative aspect-square overflow-hidden rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 hover:shadow-xl cursor-pointer ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`}
-            onClick={() => openModal(image)}
-          >
-            <Image
-              src={image.src}
-              alt={image.alt}
-              layout="fill"
-              objectFit="cover"
-              loading="lazy"
-              className="transition-transform duration-300 hover:scale-110"
-            />
-          </div>
-        ))}
-      </div>
-
-      {selectedImage && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
-          onClick={closeModal}
-        >
-          <div className="relative max-w-3xl w-full h-full max-h-[90vh] m-4">
-            <button
-              className="absolute top-4 right-4 text-white text-xl font-bold z-10"
-              onClick={closeModal}
+    <section className="py-12 bg-gray-100">
+      <SectionWrapper>
+        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {creativeImages.map(image => (
+            <div
+              key={image.id}
+              className={`relative aspect-square overflow-hidden rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 hover:shadow-xl cursor-pointer ${
+                isLoaded
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-4'
+              }`}
+              onClick={() => openModal(image)}
             >
-              &times;
-            </button>
-            <Image
-              src={selectedImage.src}
-              alt={selectedImage.alt}
-              layout="fill"
-              objectFit="contain"
-              className="rounded-lg"
-            />
-          </div>
+              <Image
+                src={image.src}
+                alt={image.alt}
+                layout="fill"
+                objectFit="cover"
+                loading="lazy"
+                className="transition-transform duration-300 hover:scale-110"
+              />
+            </div>
+          ))}
         </div>
-      )}
+
+        {selectedImage && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+            onClick={closeModal}
+          >
+            <div className="relative max-w-3xl w-full h-full max-h-[90vh] m-4">
+              <button
+                className="absolute top-4 right-4 text-white text-xl font-bold z-10"
+                onClick={closeModal}
+              >
+                &times;
+              </button>
+              <Image
+                src={selectedImage.src}
+                alt={selectedImage.alt}
+                fill
+                className="rounded-lg object-contain"
+              />
+            </div>
+          </div>
+        )}
+      </SectionWrapper>
     </section>
   );
 }

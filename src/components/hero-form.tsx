@@ -13,6 +13,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 import { useAction } from 'next-safe-action/hooks';
 import { toast } from '@/hooks/use-toast';
@@ -23,9 +30,9 @@ const formSchema = z.object({
   profession: z
     .string()
     .min(2, { message: 'Profession must be at least 2 characters.' }),
-  annualizedRevenue: z
-    .string()
-    .min(1, { message: 'Please enter an annualized revenue.' }),
+  annualizedRevenue: z.string().min(1, {
+    message: 'Please select an annualized revenue range.',
+  }),
   contact: z.string().regex(/^\d{10}$/, {
     message: 'Please enter a valid 10-digit phone number.',
   }),
@@ -33,6 +40,7 @@ const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   state: z.string().min(2, { message: 'Please enter a valid state.' }),
 });
+
 export default function HeroForm() {
   const { execute, status } = useAction(submitContact, {
     onSuccess(data) {
@@ -102,12 +110,28 @@ export default function HeroForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="truncate">Annualized Revenue</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter your annualized revenue"
-                      {...field}
-                    />
-                  </FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select revenue range" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="10_-_30_lakhs">
+                        10 - 30 lakhs
+                      </SelectItem>
+                      <SelectItem value="10_lakhs_to_50_lakhs">
+                        10 lakhs to 50 lakhs
+                      </SelectItem>
+                      <SelectItem value="1_cr._to_5_cr.">
+                        1 cr. to 5 cr.
+                      </SelectItem>
+                      <SelectItem value="5_cr.+">5 cr.+</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
