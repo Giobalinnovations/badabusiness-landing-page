@@ -25,6 +25,7 @@ import { useAction } from 'next-safe-action/hooks';
 import { toast } from '@/hooks/use-toast';
 import { submitContact } from '@/app/actions';
 import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   profession: z
@@ -42,6 +43,7 @@ const formSchema = z.object({
 });
 
 export default function HeroForm() {
+  const router = useRouter();
   const { execute, status } = useAction(submitContact, {
     onSuccess(data) {
       if (data?.data?.success) {
@@ -51,6 +53,7 @@ export default function HeroForm() {
           description: 'Your message has been sent successfully!',
         });
         form.reset();
+        router.push('/thank-you');
       }
       if (data?.data?.error) {
         toast({
