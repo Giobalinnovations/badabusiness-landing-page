@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Hanken_Grotesk } from 'next/font/google';
 // import localFont from 'next/font/local';
 import { Toaster } from '@/components/ui/toaster';
+import { GoogleAnalytics } from '@next/third-parties/google';
+import { GoogleTagManager } from '@next/third-parties/google';
 
 import './globals.css';
 
@@ -33,6 +35,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <GoogleTagManager gtmId="GTM-M468BPL6" />
+      <GoogleAnalytics gaId="G-M468BPL6" />
+
       <body className={`${hankenGrotesk.className} antialiased`}>
         {children}
         <Toaster />

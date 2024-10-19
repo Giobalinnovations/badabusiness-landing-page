@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { GoogleTagManager } from '@next/third-parties/google';
 
 export const metadata: Metadata = {
   title: 'Thank You | badabusiness',
@@ -10,8 +9,6 @@ export const metadata: Metadata = {
 export default function ThankYou() {
   return (
     <>
-      <GoogleTagManager gtmId="GTM-M468BPL6" />
-
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
         <div className="bg-white p-8 rounded-lg shadow-lg text-center max-w-md w-full animate-fade-in">
           <h1 className="text-3xl font-bold text-gray-800 mb-4">Thank You!</h1>
