@@ -1,7 +1,6 @@
 import Header from '@/components/header';
 import Hero from '@/components/hero';
 import Funnel from '@/components/funnel';
-import Creative from '@/components/creative';
 import Footer from '@/components/footer';
 import ImageWithContent from '@/components/image-with-content';
 import CardsSection from '@/components/cards-section';
@@ -50,16 +49,8 @@ Unlock your leadership potential today because a bright future belongs to those 
 </p>"
       />
 
-      {/* <ImageWithContent
-        fullWidthContent
-        imageOnRight={false}
-        imageSrc="/images/creative/img-5.webp"
-        title="Close look into the 52 Implementable Frameworks"
-        highlightedText="52 Implementable Frameworks"
-        description="<ul><li>Visionary Leadership Skills: Learn how to create a future-focused vision for your business and align your team with it.</li><li>Product Innovation & Market Edge: You will be able to get frameworks for innovation, ensuring you stay ahead of the competition while undertaking a culture of continuous improvement.</li><li>Revenue Growth & Profit Margin Enhancement: Learn about strategic techniques for revenue growth while enhancing profitability.</li><li>Global Expansion Strategies: Find insights on penetration into new markets and expansion of your business across international borders.</li><li>High-Performance Team Building: Develop leaders within your team to build a sustainable, high-performing workforce.</li><li>Financial Acumen and Operations Excellence: Learn how to make informed financial decisions based on data, streamline processes for greater productivity, and more.</li></ul><p>The 52 frameworks the Leadership Funnel Program has to its credit are undoubtedly its biggest strength. Each of these frameworks has been specifically designed to tackle each challenge facing businesses and leaders today. There are extremely important business functions for which all these frameworks are aligned, such as:</p><ul><li> Strategy & Purpose Development: Such frameworks as the Arrow Model and 5Ps of Strategy Reformation help leaders take a defined stance regarding their organization's mission, purpose, and strategic direction.</li><li>Talent Hiring & Retention: Frameworks will help guide you as to what it takes to have a productive workplace culture-structured training process, engagement strategies, and ESOPs.</li><li>Product Development and Market Positioning It involves the application of tools such as the VRIO framework and customer experience models so as to ensure that your lines for product development are indeed in line with market requirements and create brand equity.</li><li>Financial planning and cash flow management: Participants acquire the frameworks for monitoring and improving profitability, cash flow management, and pass-through income models.</li><li>Performance Optimization: Frameworks for performance evaluation, like the 7 Steps to Achieve Dreams and Execution Excellence, help leaders zero in on results while optimizing the processes.</li></ul><p>These frameworks are easy to implement and have been used by more than 1500 corporations and over 100 CEOs coached by Dr. Bindra himself.</p>"
-      /> */}
       <CardsSection />
-      {/* <Creative /> */}
+
       <Footer />
     </main>
   );

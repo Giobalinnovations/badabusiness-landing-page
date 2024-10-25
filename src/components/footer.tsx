@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -10,6 +11,10 @@ export default function Footer() {
           &copy; {currentYear}{' '}
           <span className="font-bold text-primary">badabusiness</span>. All
           rights reserved.
+          {' | '}
+          <Link href="/privacy-policy" className="hover:underline">
+            Privacy Policy
+          </Link>
         </p>
       </div>
     </footer>
